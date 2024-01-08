@@ -21,7 +21,7 @@ ax.set_xlabel('X')
 ax.set_ylabel('u(x,t) = Temperature')
 line, = ax.plot([], [], lw=1)
 #100 time steps plot animation
-for i in range(200):
+for i in range(20):
     nr_times = 1
     u, time = EulerHeatConstBC(u, x, dt, nr_times, time)
     line.set_data(x, u)
