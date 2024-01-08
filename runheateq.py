@@ -1,4 +1,6 @@
 import numpy as np 
+import imageio
+import io
 from heatequation import *
 from matplotlib import animation, pyplot as plt
 
@@ -20,9 +22,19 @@ ax = plt.axes(xlim=(0,np.pi), ylim=(2,3))
 ax.set_xlabel('X')
 ax.set_ylabel('u(x,t) = Temperature')
 line, = ax.plot([], [], lw=1)
-#100 time steps plot animation
-for i in range(20):
+frames = []
+for i in range(200):
     nr_times = 1
     u, time = EulerHeatConstBC(u, x, dt, nr_times, time)
     line.set_data(x, u)
-    plt.savefig(str("{0:03}".format(i))+'.png')
+    plt.figure()
+    plt.plot(x, u)
+    plt.close()
+    buf = io.BytesIO()  # Create an in-memory buffer                                                           
+    plt.savefig(buf, format='png')  # Save figure to the buffer                                                
+    buf.seek(0)
+    frame = imageio.imread(buf)  # Read the image from the buffer                                              
+    frames.append(frame)
+
+# Save the frames as a gif                                                                                     
+imageio.mimsave('heat_equation_simulation.gif', frames, fps=10)  # fps is frames per second 
